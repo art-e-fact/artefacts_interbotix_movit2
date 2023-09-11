@@ -1,3 +1,6 @@
 [submodule "src/interbotix_ros_core"]
 	path = src/interbotix_ros_core
 	url = git@github.com:Interbotix/interbotix_ros_core.git
+[submodule "src/interbotix_ros_toolboxes"]
+	path = src/interbotix_ros_toolboxes
+	url = git@github.com:Interbotix/interbotix_ros_toolboxes.git
