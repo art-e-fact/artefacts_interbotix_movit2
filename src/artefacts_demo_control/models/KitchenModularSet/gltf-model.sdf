@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="KitchenModularSet">
+    <static>True</static>
+    <link name="KitchenModularSet_link">
+      <visual name="KitchenModularSet_visual">
+        <geometry>
+          <mesh>
+            <uri>assets/visual.glb</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

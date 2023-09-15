@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="DeepBrownWoodenTray">
+    <static>True</static>
+    <link name="DeepBrownWoodenTray_link">
+      <visual name="DeepBrownWoodenTray_visual">
+        <geometry>
+          <mesh>
+            <uri>assets/visual.glb</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
