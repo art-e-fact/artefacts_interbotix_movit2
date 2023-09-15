@@ -7,3 +7,6 @@
 [submodule "src/interbotix_ros_manipulators"]
 	path = src/interbotix_ros_manipulators
 	url = git@github.com:art-e-fact/interbotix_ros_manipulators.git
+[submodule "src/moveit_visual_tools"]
+	path = src/moveit_visual_tools
+	url = git@github.com:ros-planning/moveit_visual_tools.git
