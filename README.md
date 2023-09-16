@@ -16,19 +16,30 @@ source /usr/share/gazebo/setup.bash
 ```
 
 # Running Launchfiles
+## Gazebo with Moveit (Real)
+
+```
+ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 use_gazebo:=true hardware_type:=actual
+```
+
 ## Gazebo with Moveit (No Objects)
+
 ```
 ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 use_gazebo:=true hardware_type:=gz_classic
 ```
+
 ## Gazebo with Moveit (Cylinder)
 
 ## Gazebo with Moveit (Square Block)
 
 # Running Nodes
+
 ## Full Pick and Place
+
 ```
 ros2 run artefacts_demo_control artefacts_control
 ```
+
 ## Calling Joints
 
 ```
