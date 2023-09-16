@@ -26,5 +26,17 @@ ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 us
 
 # Running Nodes
 ## Full Pick and Place
+```
+ros2 run artefacts_demo_control artefacts_control
+```
 ## Calling Joints
+
+```
+ros2 run artefacts_demo_control ex_joint_goal
+```
+
 ## Calling Gripper
+
+```
+ros2 run artefacts_demo_control ex_gripper_command
+```
