@@ -102,12 +102,6 @@ def main():
     # Create node for this example
     node = Node("ex_gripper")
 
-    # Declare parameter for gripper action
-    # node.declare_parameter(
-    #     "action",
-    #     "toggle",
-    # )
-
     # Create callback group that allows execution of callbacks in parallel without restrictions
     callback_group = ReentrantCallbackGroup()
 
@@ -131,35 +125,15 @@ def main():
 
     # Sleep a while in order to get the first joint state
     node.create_rate(10.0).sleep()
-    node.declare_parameter("action", ["open"])
 
-    # Get parameter
-    action = node.get_parameter("action").get_parameter_value().string_value
-
-    # Perform gripper action
-    node.get_logger().info(f'Performing gripper action "{action}"')
-    print("close")
     # moveit2_gripper.toggle()
     moveit2_gripper.open()
     moveit2_gripper.wait_until_executed()
-    time.sleep(10)
-    # if "open" == action:
-    #     print("open")
-    #     moveit2_gripper.open()
-    #     moveit2_gripper.wait_until_executed()
-    #     time.sleep(10)
-    # elif "close" == action:
-    #     print("close")
-    #     moveit2_gripper.close()
-    #     moveit2_gripper.wait_until_executed()
-    # else:
-    #     print("else")
-    #     period_s = 1.0
-    #     rate = node.create_rate(1 / period_s)
-    #     while rclpy.ok():
-    #         moveit2_gripper()
-    #         moveit2_gripper.wait_until_executed()
-    #         rate.sleep()
+    time.sleep(5)
+
+    moveit2_gripper.close()
+    moveit2_gripper.wait_until_executed()
+    time.sleep(5)
 
     rclpy.shutdown()
     exit(0)
