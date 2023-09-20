@@ -36,7 +36,7 @@ def main():
         node=node,
         gripper_joint_names=panda.gripper_joint_names(),
         open_gripper_joint_positions=panda.OPEN_GRIPPER_JOINT_POSITIONS,
-        closed_gripper_joint_positions=panda.CLOSED_GRIPPER_JOINT_POSITIONS,
+        closed_gripper_joint_positions=[0.02, -0.02],
         gripper_group_name=panda.MOVE_GROUP_GRIPPER,
         callback_group=callback_group,
         follow_joint_trajectory_action_name = "/wx200/gripper_controller/follow_joint_trajectory"
@@ -52,12 +52,26 @@ def main():
     node.declare_parameter("cartesian", True)
 
 
-    position_init = [0.4, 0.0, 0.3]
+    position_init = [0.2, 0.2, 0.3]
     position_travel = [0.3, 0.1, 0.15]
     position_pick = [0.416925, 0.0, 0.02]
     position_place = [0.3, 0.1, 0.02]
+    joint_positions_init = [
+                            0.0,
+                            -1.35,
+                            1.5,
+                            0.8,
+                            0.0,
+                        ]
+    joint_positions_pick = [
+                            0.0,
+                            0.820305,
+                            0.226893,
+                            -1.02974,
+                            0.0,
+                        ]
     joint_positions_travel = [
-                            -1.43446,
+                            -0.73446,
                             0.191986,
                             1.29154,
                             -1.48353,
@@ -74,23 +88,23 @@ def main():
     cartesian = node.get_parameter("cartesian").get_parameter_value().bool_value
 
     # Init
-    moveit2.move_to_pose(position=position_init, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
-    moveit2.wait_until_executed()
 
+    moveit2.move_to_configuration(joint_positions_init)
+    moveit2.wait_until_executed()
     # Open Gripper
     moveit2_gripper.open()
     moveit2_gripper.wait_until_executed()
-    time.sleep(5)
+    time.sleep(2)
 
     # Pick
-    moveit2.move_to_pose(position=position_pick, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
+    moveit2.move_to_configuration(joint_positions_pick)
     moveit2.wait_until_executed()
 
     # Close grippper
 
     moveit2_gripper.close()
     moveit2_gripper.wait_until_executed()
-    time.sleep(5)
+    time.sleep(2)
 
     # travel
 
@@ -99,7 +113,7 @@ def main():
 
     moveit2.move_to_configuration(joint_positions_travel)
     moveit2.wait_until_executed()
-    time.sleep(5)
+    time.sleep(1)
     # Place
 
     # moveit2.move_to_pose(position=position_place, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
@@ -111,12 +125,14 @@ def main():
     # Open Gripper
     moveit2_gripper.open()
     moveit2_gripper.wait_until_executed()
-    time.sleep(5)
+    time.sleep(1)
 
     # Back 2 Init 
-    moveit2.move_to_pose(position=position_init, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
+    moveit2.move_to_configuration(joint_positions_travel)
     moveit2.wait_until_executed()
 
+    moveit2.move_to_configuration(joint_positions_init)
+    moveit2.wait_until_executed()
 
     rclpy.shutdown()
     exit(0)
