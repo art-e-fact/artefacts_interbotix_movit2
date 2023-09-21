@@ -18,10 +18,11 @@ def main():
 
     # Create node for this example
     node = Node("artefacts_control")
-
+# 0.436374 => box x-coordinate
     callback_group = ReentrantCallbackGroup()
-
-    # Create MoveIt 2 Arm Interface
+# 0.336212
+# 0.000650
+    # Create MoveIt 2 Interbotix wx200 Arm Interface
     moveit2 = MoveIt2(
         node=node,
         joint_names=panda.joint_names(),
@@ -32,6 +33,7 @@ def main():
         follow_joint_trajectory_action_name = "/wx200/arm_controller/follow_joint_trajectory"
     )
 
+    # Create MoveIt 2 Interbotix wx200 Gripper Interface
     moveit2_gripper = MoveIt2Gripper(
         node=node,
         gripper_joint_names=panda.gripper_joint_names(),
@@ -48,14 +50,7 @@ def main():
     executor_thread = Thread(target=executor.spin, daemon=True, args=())
     executor_thread.start()
 
-    node.declare_parameter("quat_xyzw", [0.0, 0.0, 0.0, 1.0])
-    node.declare_parameter("cartesian", True)
-
-
-    position_init = [0.2, 0.2, 0.3]
-    position_travel = [0.3, 0.1, 0.15]
-    position_pick = [0.416925, 0.0, 0.02]
-    position_place = [0.3, 0.1, 0.02]
+# Joint Position of Interest
     joint_positions_init = [
                             0.0,
                             -1.35,
@@ -70,6 +65,14 @@ def main():
                             -1.02974,
                             0.0,
                         ]
+    joint_positions_lift = [
+                            0.0,
+                            0.226893,
+                            0.226893,
+                            -1.02974,
+                            0.0,
+                        ]
+
     joint_positions_travel = [
                             -0.73446,
                             0.191986,
@@ -84,8 +87,6 @@ def main():
                             -1.02974,
                             0.0,
                         ]
-    quat_xyzw = node.get_parameter("quat_xyzw").get_parameter_value().double_array_value
-    cartesian = node.get_parameter("cartesian").get_parameter_value().bool_value
 
     # Init
 
@@ -107,17 +108,14 @@ def main():
     time.sleep(2)
 
     # travel
-
-    # moveit2.move_to_pose(position=position_travel, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
-    # moveit2.wait_until_executed()
+    moveit2.move_to_configuration(joint_positions_lift)
+    moveit2.wait_until_executed()
 
     moveit2.move_to_configuration(joint_positions_travel)
     moveit2.wait_until_executed()
     time.sleep(1)
     # Place
 
-    # moveit2.move_to_pose(position=position_place, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
-    # moveit2.wait_until_executed()
 
     moveit2.move_to_configuration(joint_positions_place)
     moveit2.wait_until_executed()
@@ -137,16 +135,9 @@ def main():
     rclpy.shutdown()
     exit(0)
 
-# def move_arm_to_pose(self):
-#     moveit2.move_to_pose(position=position_init, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
-#     moveit2.wait_until_executed()
-# def move_arm_joints(self):
-#     pass
-# def place(self):
-#     pass
-# def transfer(self):
-#     pass
-# def arm_init(self):
-#     pass
+# def move_arm_joints(self, joint_positions):
+#     self.moveit2.move_to_configuration(joint_positions)
+#     self.moveit2.wait_until_executed()
+
 if __name__ == "__main__":
     main()
