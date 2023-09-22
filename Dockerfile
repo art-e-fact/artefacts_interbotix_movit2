@@ -16,4 +16,5 @@ RUN source /opt/ros/humble/setup.bash && \
     source /ws/install/setup.bash && \
     source /usr/share/gazebo/setup.bash
 
+COPY artefacts.yaml .
 CMD ["artefacts", "run", "$ARTEFACTS_JOB_NAME"]
