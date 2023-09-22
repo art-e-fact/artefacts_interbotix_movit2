@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'artefacts_control = artefacts_demo_control.interbotix_moveit_control_node:main',
+            'artefacts_control = artefacts_demo_control.push_object:main',
+            'artefacts_control_old = artefacts_demo_control.interbotix_moveit_control_node:main',
             'ex_pose_goal = artefacts_demo_control.pose_goal:main',
             "ex_joint_goal = artefacts_demo_control.joint_goal:main",
             "ex_gripper_command = artefacts_demo_control.gripper_control:main"
