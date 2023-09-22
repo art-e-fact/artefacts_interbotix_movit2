@@ -1,0 +1,22 @@
+version: 0.1.0
+
+project: artefacts_interbotix_movit2
+
+jobs:
+  demo:
+    type: test
+    package:
+      docker:
+        build:
+          dockerfile: ./Dockerfile
+    runtime:
+      simulator: gazebo:11
+      framework: ros2:humble
+    scenarios:
+      settings:
+        - name: full
+          ros_testfile: demo/launch/test.launch.py
+        - name: joints
+          ros_testfile: demo/launch/test.launch.py
+        - name: gripper
+          ros_testfile: demo/launch/test.launch.py
