@@ -1,5 +1,5 @@
 """
-Example of pick and place node
+Example of push node
 """
 
 from threading import Thread
