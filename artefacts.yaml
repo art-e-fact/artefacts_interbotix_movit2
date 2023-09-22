@@ -15,8 +15,8 @@ jobs:
     scenarios:
       settings:
         - name: full
-          ros_testfile: demo/launch/test.launch.py
+          run: ros2 run artefacts_demo_control artefacts_control
         - name: joints
-          ros_testfile: demo/launch/test.launch.py
+          run: ros2 run artefacts_demo_control ex_joint_goal
         - name: gripper
-          ros_testfile: demo/launch/test.launch.py
+          run: ros2 run artefacts_demo_control ex_gripper_command
