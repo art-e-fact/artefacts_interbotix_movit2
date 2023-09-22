@@ -11,7 +11,6 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 WORKDIR /ws
 
 COPY src src
-RUN rosdep install --from-paths src --ignore-src -r -y
 RUN source /opt/ros/humble/setup.bash && \
     colcon build && \
     source /ws/install/setup.bash && \
