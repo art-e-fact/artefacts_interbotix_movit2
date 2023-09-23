@@ -35,10 +35,44 @@ if match:
 else:
     print("No x, y, or z variables found in the text.")
 
-ExecuteProcess(
-        cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
-        output="log")
 
+# @pytest.mark.launch_test
+# def generate_test_description():
+#     return LaunchDescription([
+#         Node(
+#             package="artefacts_demo_control",
+#             executable='artefacts_control',
+#         ),
+#         launch_testing.actions.ReadyToTest()
+#     ])
+
+# ExecuteProcess(
+#         cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+#         output="log")
+
+@pytest.mark.launch_test
+def generate_test_description():
+    return LaunchDescription([
+
+        # ExecuteProcess(
+        #         cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+        #         output="log"),
+
+        ExecuteProcess(
+                cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+                output="log"),
+        launch_testing.actions.ReadyToTest()
+
+
+    ])
+
+# ExecuteProcess(
+#         cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+#         output="log")
+
+# ExecuteProcess(
+#         cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+#         output="log")
 
 sleep(10)
 
