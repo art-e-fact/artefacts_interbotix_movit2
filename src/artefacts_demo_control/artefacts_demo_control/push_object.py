@@ -18,7 +18,7 @@ def main():
 
     # Create node
     node = Node("artefacts_control")
-    
+
     callback_group = ReentrantCallbackGroup()
 
     # Create MoveIt 2 Interbotix wx200 Arm Interface
@@ -76,29 +76,21 @@ def main():
 
     moveit2.move_to_configuration(joint_positions_init)
     moveit2.wait_until_executed()
-    # Open Gripper
+
+    # Close Gripper
     moveit2_gripper.close()
     moveit2_gripper.wait_until_executed()
     time.sleep(2)
 
-    # Pick
+    # Ready
     moveit2.move_to_configuration(joint_positions_ready)
     moveit2.wait_until_executed()
 
-    # Close grippper
-
-    #moveit2_gripper.close()
-    #moveit2_gripper.wait_until_executed()
-    #time.sleep(2)
-
-    # Place
-
+    # Push
     moveit2.move_to_configuration(joint_positions_push)
     moveit2.wait_until_executed()
 
-
     # Back 2 Init 
-
     moveit2.move_to_configuration(joint_positions_ready)
     moveit2.wait_until_executed()
     moveit2.move_to_configuration(joint_positions_init)
@@ -106,10 +98,6 @@ def main():
 
     rclpy.shutdown()
     exit(0)
-
-# def move_arm_joints(self, joint_positions):
-#     self.moveit2.move_to_configuration(joint_positions)
-#     self.moveit2.wait_until_executed()
 
 if __name__ == "__main__":
     main()
