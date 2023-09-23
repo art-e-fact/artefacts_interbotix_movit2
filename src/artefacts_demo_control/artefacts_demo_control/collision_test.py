@@ -15,10 +15,8 @@ from launch_ros.actions import Node
 command = ["gz", "model", "-m", "artefacts_box", "-i"]
 result = subprocess.run(command, check = True, text = True, stdout=subprocess.PIPE)
 result_output = result.stdout
-# print(result_output)
 
 # Extract position data if it exists
-
 position_pattern = r"pose\s*{\s*position\s*{\s*x:\s*(-?\d+\.\d+)\s*y:\s*(-?\d+\.\d+)\s*z:\s*(-?\d+\.\d+)"
 
 # Search for the x, y, and z variables using the regular expression
@@ -35,51 +33,70 @@ if match:
 else:
     print("No x, y, or z variables found in the text.")
 
+# Command for running node as a subprocess
+command_node = ["ros2", "run", "artefacts_demo_control", "artefacts_control"]
+running_node = subprocess.run(command_node, check = True, text = True, stdout=subprocess.PIPE)
 
-# @pytest.mark.launch_test
-# def generate_test_description():
-#     return LaunchDescription([
-#         Node(
-#             package="artefacts_demo_control",
-#             executable='artefacts_control',
-#         ),
-#         launch_testing.actions.ReadyToTest()
-#     ])
+sleep(5)
 
-# ExecuteProcess(
-#         cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
-#         output="log")
+command = ["gz", "model", "-m", "artefacts_box", "-i"]
+result = subprocess.run(command, check = True, text = True, stdout=subprocess.PIPE)
+result_output = result.stdout
 
+# Extract new position data if it exists
+position_pattern = r"pose\s*{\s*position\s*{\s*x:\s*(-?\d+\.\d+)\s*y:\s*(-?\d+\.\d+)\s*z:\s*(-?\d+\.\d+)"
+
+# Search for the new x, y, and z variables using the regular expression
+match = re.search(position_pattern, result_output, re.DOTALL)
+
+# Extract the new x, y, and z variables if a match is found
+if match:
+    x_new_variable = float(match.group(1))
+    y_new_variable = float(match.group(2))
+    z_new_variable = float(match.group(3))
+    print(f"x: {x_new_variable}")
+    print(f"y: {y_new_variable}")
+    print(f"z: {z_new_variable}")
+else:
+    print("No x, y, or z variables found in the text.")
+
+# Enable test node, it will error out but this must exist for process to occur
 @pytest.mark.launch_test
 def generate_test_description():
     return LaunchDescription([
+        Node(
+            package="artefacts_demo_control",
+            executable='artefacts_control',
+            output="screen"
+        ),
 
+# Attempted commands to launch node, all unsucesful
+##############################
         # ExecuteProcess(
-        #         cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+        #         cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/push_object.py"],
         #         output="log"),
 
-        ExecuteProcess(
-                cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
-                output="log"),
+        # ExecuteProcess(
+        #         cmd=[sys.executable, "push_object.py"],
+        #         output="log"),
+
+        # ExecuteProcess(
+        #         cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/push_object.py"],
+        #         output="log"),
+
+#################################
         launch_testing.actions.ReadyToTest()
+    ]), {}
 
-
-    ])
-
-# ExecuteProcess(
-#         cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
-#         output="log")
-
-# ExecuteProcess(
-#         cmd=["python3", "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
-#         output="log")
-
-sleep(10)
 
 @launch_testing.post_shutdown_test()
 class TestCollision(unittest.TestCase):
     def test_collsion(self):
-        # Check that all processes in the launch (in this case, there's just one) exit
-        # with code 0
-        # launch_testing.asserts.assertExitCodes(proc_info)
-        print("hello")
+        '''
+        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
+        '''
+        print("Testing")
+        decimal = 3
+        self.assertAlmostEqual(x_variable, x_new_variable, decimal)
+        self.assertAlmostEqual(y_variable, y_new_variable, decimal)
+        self.assertAlmostEqual(z_variable, z_new_variable, decimal)
