@@ -4,6 +4,7 @@ import os
 import subprocess
 import json
 import re
+from time import sleep
 
 import pytest
 import launch_testing
@@ -34,21 +35,16 @@ if match:
 else:
     print("No x, y, or z variables found in the text.")
 
+ExecuteProcess(
+        cmd=[sys.executable, "src/artefacts_demo_control/artefacts_demo_control/interbotix_moveit_control_node.py"],
+        output="log")
 
 
-@pytest.mark.launch_test
-def generate_test_description():
-    return LaunchDescription([
-        Node(
-            package="artefacts_demo_control",
-            executable='artefacts_control',
-        ),
-        launch_testing.actions.ReadyToTest()
-    ])
+sleep(10)
 
 @launch_testing.post_shutdown_test()
 class TestCollision(unittest.TestCase):
-    def test_collsion(self, proc_info):
+    def test_collsion(self):
         # Check that all processes in the launch (in this case, there's just one) exit
         # with code 0
         # launch_testing.asserts.assertExitCodes(proc_info)
