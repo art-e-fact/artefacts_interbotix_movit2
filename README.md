@@ -28,9 +28,12 @@ ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 us
 ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 use_gazebo:=true hardware_type:=gz_classic
 ```
 
-## Gazebo with Moveit (Cylinder)
-
 ## Gazebo with Moveit (Square Block)
+
+```
+ros2 launch interbotix_xsarm_moveit xsarm_moveit.launch.py robot_model:=wx200 use_gazebo:=true hardware_type:=gz_classic world_filepath:=/home/decarabas/artefacts_interbotix_movit2/src/artefacts_demo_control/world/artefacts_demo_world.sdf
+```
+Please not that when running the command the world_filepath has to be replaced with the relative path on your machine to the world
 
 # Running Nodes
 
