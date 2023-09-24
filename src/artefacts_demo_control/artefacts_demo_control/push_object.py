@@ -12,9 +12,11 @@ from rclpy.node import Node
 from pymoveit2 import MoveIt2
 from pymoveit2 import MoveIt2Gripper
 from pymoveit2.robots import interbotix as panda
+from time import sleep
 
 def main():
     rclpy.init()
+    sleep(10)
 
     # Create node
     node = Node("artefacts_control")
