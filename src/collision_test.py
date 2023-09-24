@@ -52,6 +52,10 @@ def generate_test_description():
 
 class TestCollision(unittest.TestCase):
     def test_collsion(self):
+        """
+        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
+        """
+        
         sleep(10)
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
@@ -76,9 +80,6 @@ class TestCollision(unittest.TestCase):
             print("No x, y, or z variables found in the text.")
 
         sleep(30)
-        """
-        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
-        """
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
         result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
