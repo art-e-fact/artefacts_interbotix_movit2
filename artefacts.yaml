@@ -15,8 +15,4 @@ jobs:
     scenarios:
       settings:
         - name: full
-          run: ros2 run artefacts_demo_control artefacts_control
-        - name: joints
-          run: ros2 run artefacts_demo_control ex_joint_goal
-        - name: gripper
-          run: ros2 run artefacts_demo_control ex_gripper_command
+          ros_testfile: artefacts_demo_control/collision_test.py
