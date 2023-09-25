@@ -187,7 +187,7 @@ def launch_setup(context, *args, **kwargs):
         ),
     ]
 
-#############################################  
+#############################################
     moveit_config = (
         MoveItConfigsBuilder(
             robot_name="wx200", package_name="interbotix_xsarm_moveit"
@@ -248,7 +248,7 @@ def launch_setup(context, *args, **kwargs):
         output={'both': 'log'},
     )
 
-    # test_node = Node(        
+    # test_node = Node(
     #     name="moveit_artefacts",
     #     package="interbotix_xsarm_moveit",
     #     executable='interbotix_moveit_control_node.py',
@@ -274,7 +274,7 @@ def launch_setup(context, *args, **kwargs):
     #     ],
     # )
 
-    test_node = Node(        
+    test_node = Node(
         name="moveit_artefacts",
         package="interbotix_xsarm_moveit",
         executable='interbotix_moveit_control_node.py',
