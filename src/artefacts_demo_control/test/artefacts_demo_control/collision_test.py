@@ -17,11 +17,13 @@ from launch.substitutions import PathJoinSubstitution
 
 @pytest.mark.launch_test
 def generate_test_description():
-    artefacts_demo_world = os.path.join(
-        ament_index_python.get_package_prefix("artefacts_demo_control"),
-        "world",
-        "artefacts_demo_world.sdf",
-    )
+
+    artefacts_demo_world = PathJoinSubstitution(
+                    [
+                        FindPackageShare("artefacts_demo_control"),
+                        "world",
+                        "artefacts_demo_world.sdf",
+                    ])
 
     sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
