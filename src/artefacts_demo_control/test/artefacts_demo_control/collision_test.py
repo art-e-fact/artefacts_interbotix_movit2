@@ -22,7 +22,6 @@ def generate_test_description():
         "world",
         "artefacts_demo_world.sdf",
     )
-    breakpoint()
 
     sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -38,7 +37,6 @@ def generate_test_description():
         ),
         launch_arguments={
             "robot_model": "wx200",
-            # Must change this line on new machine
             "world_filepath": artefacts_demo_world,
             "hardware_type": "gz_classic",
             "use_gazebo": "true",
