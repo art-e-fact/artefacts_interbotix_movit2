@@ -5,13 +5,27 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     mkdir -p /etc/apt/sources.list.d && \
     echo deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main > /etc/apt/sources.list.d/ros2.list && \
     apt-get update && \
-    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo ros-humble-hardware-interface ros-humble-moveit-common ros-humble-dynamixel-sdk
+RUN apt-get install --yes --quiet ros-humble-graph-msgs
+RUN apt-get install --yes --quiet ros-humble-moveit-core
+RUN apt-get install --yes --quiet ros-humble-moveit-ros-planning
+RUN apt-get install --yes --quiet ros-humble-rviz-visual-tools
+RUN apt-get install --yes --quiet ros-humble-ros2-control-test-assets
+RUN apt-get install --yes --quiet ros-humble-robot-state-publisher
+RUN apt-get install --yes --quiet ros-humble-xacro
+RUN apt-get install --yes --quiet ros-humble-moveit-ros-move-group
+RUN apt-get install --yes --quiet ros-humble-gazebo-ros
+RUN apt-get install --yes --quiet ros-humble-ompl
+RUN apt-get install --yes --quiet ros-humble-moveit-planners-ompl
+RUN apt-get install --yes --quiet ros-humble-moveit-ros-control-interface
+RUN apt-get install --yes --quiet ros-humble-controller-manager
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ws
 
 COPY src src
 RUN source /opt/ros/humble/setup.bash && \
+    rosdep install --from-paths src --ignore-src src --default-yes --rosdistro humble -t test && \
     source /usr/share/gazebo/setup.bash && \
     colcon build
 
