@@ -15,4 +15,4 @@ jobs:
     scenarios:
       settings:
         - name: collision
-          ros_testfile: collision_test.py
+          ros_testfile: test/artefacts_demo_control/collision_test.py
