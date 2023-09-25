@@ -55,7 +55,7 @@ class TestCollision(unittest.TestCase):
         """
         Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
         """
-        
+
         sleep(10)
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
