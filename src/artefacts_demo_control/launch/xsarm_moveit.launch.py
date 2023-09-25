@@ -84,6 +84,7 @@ def launch_setup(context, *args, **kwargs):
     robot_description_launch_arg = LaunchConfiguration('robot_description')
     hardware_type_launch_arg = LaunchConfiguration('hardware_type')
     xs_driver_logging_level_launch_arg = LaunchConfiguration('xs_driver_logging_level')
+    use_gazebo_gui_arg = LaunchConfiguration('use_gazebo_gui')
 
     # sets use_sim_time parameter to 'true' if using gazebo hardware
     use_sim_time_param = determine_use_sim_time_param(
@@ -309,6 +310,7 @@ def launch_setup(context, *args, **kwargs):
             'mode_configs': mode_configs_launch_arg,
             'hardware_type': hardware_type_launch_arg,
             'robot_description': robot_description_launch_arg,
+            'use_sim': use_sim_time_param,
             'use_sim_time': use_sim_time_param,
             'xs_driver_logging_level': xs_driver_logging_level_launch_arg,
         }.items(),
@@ -341,6 +343,7 @@ def launch_setup(context, *args, **kwargs):
             'hardware_type': hardware_type_launch_arg,
             'robot_description': robot_description_launch_arg,
             'use_sim_time': use_sim_time_param,
+            'use_gazebo_gui': use_gazebo_gui_arg,
         }.items(),
         condition=LaunchConfigurationEquals(
             launch_configuration_name='hardware_type',
@@ -454,6 +457,14 @@ def generate_launch_description():
                 'published over the ROS topic /clock; this value is automatically set to `true` if'
                 ' using Gazebo hardware.'
             )
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'use_gazebo_gui',
+            default_value='true',
+            choices=('true', 'false'),
+            description="Start a gzclient, or not","
         )
     )
     declared_arguments.extend(

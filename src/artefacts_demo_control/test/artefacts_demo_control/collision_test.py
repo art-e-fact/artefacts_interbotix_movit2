@@ -44,6 +44,7 @@ def generate_test_description():
             "use_gazebo": "true",
             "use_rviz": "false",
             "use_moveit_rviz": "false",
+            "use_gazebo_gui": "false",
         }.items(),
     )
 
