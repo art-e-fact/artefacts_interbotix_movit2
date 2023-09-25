@@ -12,9 +12,8 @@ WORKDIR /ws
 
 COPY src src
 RUN source /opt/ros/humble/setup.bash && \
-    colcon build && \
-    source /ws/install/setup.bash && \
-    source /usr/share/gazebo/setup.bash
+    source /usr/share/gazebo/setup.bash && \
+    colcon build
 
 COPY artefacts.yaml .
-CMD source /opt/ros/humble/setup.bash && source /ws/install/setup.bash && source /usr/share/gazebo/setup.bash && artefacts run $ARTEFACTS_JOB_NAME
+CMD source /opt/ros/humble/setup.bash && source /usr/share/gazebo/setup.bash && source /ws/install/setup.bash && artefacts run $ARTEFACTS_JOB_NAME
