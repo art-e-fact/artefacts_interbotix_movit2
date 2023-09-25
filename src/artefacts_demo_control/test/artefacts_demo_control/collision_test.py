@@ -40,6 +40,8 @@ def generate_test_description():
             "world_filepath": artefacts_demo_world,
             "hardware_type": "gz_classic",
             "use_gazebo": "true",
+            "use_rviz": "false",
+            "use_moveit_rviz": "false",
         }.items(),
     )
 
