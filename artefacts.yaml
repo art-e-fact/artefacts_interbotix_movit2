@@ -14,5 +14,5 @@ jobs:
       framework: ros2:humble
     scenarios:
       settings:
-        - name: full
-          ros_testfile: artefacts_demo_control/collision_test.py
+        - name: collision
+          ros_testfile: collision_test.py
