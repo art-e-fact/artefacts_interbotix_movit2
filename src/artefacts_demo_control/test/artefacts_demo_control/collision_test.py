@@ -1,8 +1,10 @@
+import os
 import unittest
 import subprocess
 import re
 from time import sleep
 
+import ament_index_python
 import pytest
 import launch_testing
 from launch import LaunchDescription
@@ -15,6 +17,13 @@ from launch.substitutions import PathJoinSubstitution
 
 @pytest.mark.launch_test
 def generate_test_description():
+    artefacts_demo_world = os.path.join(
+        ament_index_python.get_package_prefix("artefacts_demo_control"),
+        "world",
+        "artefacts_demo_world.sdf",
+    )
+    breakpoint()
+
     sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -30,7 +39,7 @@ def generate_test_description():
         launch_arguments={
             "robot_model": "wx200",
             # Must change this line on new machine
-            "world_filepath": "/home/decarabas/artefacts_interbotix_movit2/src/artefacts_demo_control/world/artefacts_demo_world.sdf",
+            "world_filepath": artefacts_demo_world,
             "hardware_type": "gz_classic",
             "use_gazebo": "true",
         }.items(),
@@ -55,7 +64,7 @@ class TestCollision(unittest.TestCase):
         """
         Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
         """
-        
+
         sleep(10)
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
@@ -78,6 +87,9 @@ class TestCollision(unittest.TestCase):
             print(f"z: {z_variable}")
         else:
             print("No x, y, or z variables found in the text.")
+            x_variable = 0.0
+            y_variable = 0.0
+            z_variable = 0.0
 
         sleep(30)
 
@@ -101,6 +113,9 @@ class TestCollision(unittest.TestCase):
             print(f"z new variable: {z_new_variable}")
         else:
             print("No x, y, or z variables found in the text.")
+            x_new_variable = 0.0
+            y_new_variable = 0.0
+            z_new_variable = 0.0
 
         sleep(10)
 
