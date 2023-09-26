@@ -25,11 +25,11 @@ WORKDIR /ws
 COPY src src
 
 WORKDIR /ws/src
-RUN git clone --depth 1 --single-branch --branch humble --quiet https://github.com/Interbotix/interbotix_ros_core.git || true
-RUN git clone --depth 1 --single-branch --branch humble --quiet https://github.com/Interbotix/interbotix_ros_toolboxes.git || true
-RUN git clone --depth 1 --single-branch --branch ros2 --quiet https://github.com/Interbotix/interbotix_xs_driver.git || true
-RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/interbotix_ros_manipulators.git || true
-RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/pymoveit2.git || true
+RUN git clone --depth 1 --single-branch --branch humble https://github.com/Interbotix/interbotix_ros_core.git || true
+RUN git clone --depth 1 --single-branch --branch humble https://github.com/Interbotix/interbotix_ros_toolboxes.git || true
+RUN git clone --depth 1 --single-branch --branch humble https://github.com/Interbotix/interbotix_ros_manipulators.git || true
+RUN git clone --depth 1 --single-branch --branch ros2 https://github.com/Interbotix/interbotix_xs_driver.git || true
+RUN git clone --depth 1 --single-branch https://github.com/art-e-fact/pymoveit2.git || true
 
 WORKDIR /ws
 RUN source /opt/ros/humble/setup.bash && \
