@@ -5,7 +5,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     mkdir -p /etc/apt/sources.list.d && \
     echo deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main > /etc/apt/sources.list.d/ros2.list && \
     apt-get update && \
-    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo ros-humble-hardware-interface ros-humble-moveit-common ros-humble-dynamixel-sdk ros-humble-moveit-visual-tools
+    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo ros-humble-hardware-interface ros-humble-moveit-common ros-humble-dynamixel-sdk ros-humble-moveit-visual-tools ros-humble-dynamixel-workbench-toolbox
 RUN apt-get install --yes --quiet ros-humble-graph-msgs
 RUN apt-get install --yes --quiet ros-humble-moveit-core
 RUN apt-get install --yes --quiet ros-humble-moveit-ros-planning
