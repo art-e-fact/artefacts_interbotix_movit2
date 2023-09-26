@@ -23,8 +23,18 @@ RUN apt-get install --yes --quiet ros-humble-controller-manager
 WORKDIR /ws
 
 COPY src src
+
+WORKDIR /ws/src
+RUN git clone --depth 1 --single-branch --quiet https://github.com/Interbotix/interbotix_ros_core.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/Interbotix/interbotix_ros_toolboxes.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/Interbotix/interbotix_moveit_interface.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/Interbotix/interbotix_xsarm_perception.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/interbotix_ros_manipulators.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/ros-planning/moveit_visual_tools.git || true
+RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/pymoveit2.git || true
+
+WORKDIR /ws
 RUN source /opt/ros/humble/setup.bash && \
-    rosdep install --from-paths src --ignore-src src --default-yes --rosdistro humble && \
     source /usr/share/gazebo/setup.bash && \
     colcon build
 
