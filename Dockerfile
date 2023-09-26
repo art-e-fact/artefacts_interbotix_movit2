@@ -25,7 +25,7 @@ WORKDIR /ws
 
 COPY src src
 RUN source /opt/ros/humble/setup.bash && \
-    rosdep install --from-paths src --ignore-src src --default-yes --rosdistro humble -t test && \
+    rosdep install --from-paths src --ignore-src src --default-yes --rosdistro humble && \
     source /usr/share/gazebo/setup.bash && \
     colcon build
 
