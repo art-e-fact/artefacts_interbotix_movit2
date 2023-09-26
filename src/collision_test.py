@@ -30,7 +30,7 @@ def generate_test_description():
         launch_arguments={
             "robot_model": "wx200",
             # Must change this line on new machine
-            "world_filepath": "/home/decarabas/artefacts_interbotix_movit2/src/artefacts_demo_control/world/artefacts_demo_world.sdf",
+            "world_filepath": "/home/locobot/interbotix_ws/src/artefacts_interbotix_movit2/src/artefacts_demo_control/world/artefacts_demo_world.sdf",
             "hardware_type": "gz_classic",
             "use_gazebo": "true",
         }.items(),
