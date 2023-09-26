@@ -19,7 +19,6 @@ RUN apt-get install --yes --quiet ros-humble-ompl
 RUN apt-get install --yes --quiet ros-humble-moveit-planners-ompl
 RUN apt-get install --yes --quiet ros-humble-moveit-ros-control-interface
 RUN apt-get install --yes --quiet ros-humble-controller-manager
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ws
 
@@ -28,6 +27,8 @@ RUN source /opt/ros/humble/setup.bash && \
     rosdep install --from-paths src --ignore-src src --default-yes --rosdistro humble && \
     source /usr/share/gazebo/setup.bash && \
     colcon build
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY artefacts.yaml .
 CMD source /opt/ros/humble/setup.bash && source /usr/share/gazebo/setup.bash && source /ws/install/setup.bash && artefacts run $ARTEFACTS_JOB_NAME
