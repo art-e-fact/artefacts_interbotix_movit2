@@ -5,7 +5,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     mkdir -p /etc/apt/sources.list.d && \
     echo deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main > /etc/apt/sources.list.d/ros2.list && \
     apt-get update && \
-    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo ros-humble-hardware-interface ros-humble-moveit-common ros-humble-dynamixel-sdk
+    apt-get install --yes --quiet libgazebo-dev libgazebo11 gazebo ros-humble-hardware-interface ros-humble-moveit-common ros-humble-dynamixel-sdk ros-humble-moveit-visual-tools
 RUN apt-get install --yes --quiet ros-humble-graph-msgs
 RUN apt-get install --yes --quiet ros-humble-moveit-core
 RUN apt-get install --yes --quiet ros-humble-moveit-ros-planning
@@ -30,7 +30,6 @@ RUN git clone --depth 1 --single-branch --branch humble --quiet https://github.c
 RUN git clone --depth 1 --single-branch --branch humble --quiet https://github.com/Interbotix/interbotix_moveit_interface.git || true
 RUN git clone --depth 1 --single-branch --branch humble --quiet https://github.com/Interbotix/interbotix_xsarm_perception.git || true
 RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/interbotix_ros_manipulators.git || true
-RUN git clone --depth 1 --single-branch --quiet https://github.com/ros-planning/moveit_visual_tools.git || true
 RUN git clone --depth 1 --single-branch --quiet https://github.com/art-e-fact/pymoveit2.git || true
 
 WORKDIR /ws
