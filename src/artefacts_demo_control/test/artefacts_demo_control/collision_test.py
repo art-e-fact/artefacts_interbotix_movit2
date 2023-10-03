@@ -44,7 +44,7 @@ def generate_test_description():
             "use_gazebo": "true",
             "use_rviz": "false",
             "use_moveit_rviz": "false",
-            "use_gazebo_gui": "false",
+            "use_gazebo_gui": "true",
         }.items(),
     )
 
@@ -63,12 +63,10 @@ def generate_test_description():
 
 
 class TestCollision(unittest.TestCase):
-    def test_collsion(self):
-        """
-        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
-        """
-
-        sleep(10)
+    def get_box_location(self):
+        '''
+        Function to get the location of a box
+        '''
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
         result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
@@ -85,44 +83,33 @@ class TestCollision(unittest.TestCase):
             x_variable = float(match.group(1))
             y_variable = float(match.group(2))
             z_variable = float(match.group(3))
-            print(f"x: {x_variable}")
-            print(f"y: {y_variable}")
-            print(f"z: {z_variable}")
+            print(f"x box coordinate: {x_variable}")
+            print(f"y box coordinate: {y_variable}")
+            print(f"z box coordinate: {z_variable}")
         else:
             print("No x, y, or z variables found in the text.")
             x_variable = 0.0
             y_variable = 0.0
             z_variable = 0.0
+        return x_variable, y_variable, z_variable
+
+    def test_collsion(self):
+        """
+        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
+        """
+
+        sleep(10)
+        
+        x_variable, y_variable, z_variable = self.get_box_location()
 
         sleep(30)
 
-        command = ["gz", "model", "-m", "artefacts_box", "-i"]
-        result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
-        result_output = result.stdout
-
-        # Extract new position data if it exists
-        position_pattern = r"pose\s*{\s*position\s*{\s*x:\s*(-?\d+\.\d+)\s*y:\s*(-?\d+\.\d+)\s*z:\s*(-?\d+\.\d+)"
-
-        # Search for the new x, y, and z variables using the regular expression
-        match = re.search(position_pattern, result_output, re.DOTALL)
-
-        # Extract the new x, y, and z variables if a match is found
-        if match:
-            x_new_variable = float(match.group(1))
-            y_new_variable = float(match.group(2))
-            z_new_variable = float(match.group(3))
-            print(f"x new variable: {x_new_variable}")
-            print(f"y new variable: {y_new_variable}")
-            print(f"z new variable: {z_new_variable}")
-        else:
-            print("No x, y, or z variables found in the text.")
-            x_new_variable = 0.0
-            y_new_variable = 0.0
-            z_new_variable = 0.0
+        x_new_variable, y_new_variable, z_new_variable = self.get_box_location()
 
         sleep(10)
 
         decimal = 3
+
         self.assertAlmostEqual(x_variable, x_new_variable, decimal)
         self.assertAlmostEqual(y_variable, y_new_variable, decimal)
         self.assertAlmostEqual(z_variable, z_new_variable, decimal)
