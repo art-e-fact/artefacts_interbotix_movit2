@@ -10,20 +10,22 @@ import launch_testing
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
+import launch_testing.markers
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution
 
 
 @pytest.mark.launch_test
+@launch_testing.markers.keep_alive
 def generate_test_description():
-
     artefacts_demo_world = PathJoinSubstitution(
-                    [
-                        FindPackageShare("artefacts_demo_control"),
-                        "world",
-                        "artefacts_demo_world.sdf",
-                    ])
+        [
+            FindPackageShare("artefacts_demo_control"),
+            "world",
+            "artefacts_demo_world.sdf",
+        ]
+    )
 
     sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -64,9 +66,9 @@ def generate_test_description():
 
 class TestCollision(unittest.TestCase):
     def get_box_location(self):
-        '''
+        """
         Function to get the location of a box
-        '''
+        """
 
         command = ["gz", "model", "-m", "artefacts_box", "-i"]
         result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
@@ -93,23 +95,42 @@ class TestCollision(unittest.TestCase):
             z_variable = 0.0
         return x_variable, y_variable, z_variable
 
+    def test_box_moved(self, proc_output, demo):
+        """
+        Test case to see if box has moved
+        """
+
+        sleep(10)
+
+        (
+            TestCollision.x_variable,
+            TestCollision.y_variable,
+            TestCollision.z_variable,
+        ) = self.get_box_location()
+
+        proc_output.assertWaitFor("Block has been moved", timeout=180)
+
+        (
+            TestCollision.x_new_variable,
+            TestCollision.y_new_variable,
+            TestCollision.z_new_variable,
+        ) = self.get_box_location()
+
+
+@launch_testing.post_shutdown_test()
+class TestAfterShutdown(unittest.TestCase):
     def test_collsion(self):
         """
         Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
         """
-
-        sleep(10)
-        
-        x_variable, y_variable, z_variable = self.get_box_location()
-
-        sleep(30)
-
-        x_new_variable, y_new_variable, z_new_variable = self.get_box_location()
-
-        sleep(10)
-
         decimal = 3
 
-        self.assertAlmostEqual(x_variable, x_new_variable, decimal)
-        self.assertAlmostEqual(y_variable, y_new_variable, decimal)
-        self.assertAlmostEqual(z_variable, z_new_variable, decimal)
+        self.assertAlmostEqual(
+            TestCollision.x_variable, TestCollision.x_new_variable, decimal
+        )
+        self.assertAlmostEqual(
+            TestCollision.y_variable, TestCollision.y_new_variable, decimal
+        )
+        self.assertAlmostEqual(
+            TestCollision.z_variable, TestCollision.z_new_variable, decimal
+        )
