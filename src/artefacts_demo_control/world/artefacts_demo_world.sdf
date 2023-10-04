@@ -2516,7 +2516,7 @@
         </ros>
         <robot_param>robot_description</robot_param>
         <robot_param_node>robot_state_publisher</robot_param_node>
-        <parameters>/home/decarabas/artefacts_interbotix_movit2/install/interbotix_xsarm_sim/share/interbotix_xsarm_sim/config/trajectory_controllers/wx200_trajectory_controllers.yaml</parameters>
+        <parameters>package://interbotix_xsarm_sim/share/interbotix_xsarm_sim/config/trajectory_controllers/wx200_trajectory_controllers.yaml</parameters>
       </plugin>
 
       <pose>0 0 0 0 -0 0</pose>
