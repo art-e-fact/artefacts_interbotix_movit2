@@ -64,49 +64,50 @@ def generate_test_description():
     ), {"sim": sim, "demo": demo}
 
 
+def get_model_location(model_name):
+    """
+    Function to get the location of a box
+    """
+
+    command = ["gz", "model", "-m", model_name, "-i"]
+    result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
+    result_output = result.stdout
+
+    # Extract position data if it exists
+    position_pattern = r"pose\s*{\s*position\s*{\s*x:\s*(-?\d+\.\d+)\s*y:\s*(-?\d+\.\d+)\s*z:\s*(-?\d+\.\d+)"
+
+    # Search for the x, y, and z variables using the regular expression
+    match = re.search(position_pattern, result_output, re.DOTALL)
+
+    # Extract the x, y, and z variables if a match is found
+    if match:
+        x_variable = float(match.group(1))
+        y_variable = float(match.group(2))
+        z_variable = float(match.group(3))
+        print(f"x box coordinate: {x_variable}")
+        print(f"y box coordinate: {y_variable}")
+        print(f"z box coordinate: {z_variable}")
+    else:
+        print("No x, y, or z variables found in the text.")
+        x_variable = 0.0
+        y_variable = 0.0
+        z_variable = 0.0
+    return x_variable, y_variable, z_variable
+
+
 class TestCollision(unittest.TestCase):
-    def get_box_location(self):
-        """
-        Function to get the location of a box
-        """
-
-        command = ["gz", "model", "-m", "artefacts_box", "-i"]
-        result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
-        result_output = result.stdout
-
-        # Extract position data if it exists
-        position_pattern = r"pose\s*{\s*position\s*{\s*x:\s*(-?\d+\.\d+)\s*y:\s*(-?\d+\.\d+)\s*z:\s*(-?\d+\.\d+)"
-
-        # Search for the x, y, and z variables using the regular expression
-        match = re.search(position_pattern, result_output, re.DOTALL)
-
-        # Extract the x, y, and z variables if a match is found
-        if match:
-            x_variable = float(match.group(1))
-            y_variable = float(match.group(2))
-            z_variable = float(match.group(3))
-            print(f"x box coordinate: {x_variable}")
-            print(f"y box coordinate: {y_variable}")
-            print(f"z box coordinate: {z_variable}")
-        else:
-            print("No x, y, or z variables found in the text.")
-            x_variable = 0.0
-            y_variable = 0.0
-            z_variable = 0.0
-        return x_variable, y_variable, z_variable
-
     def test_box_moved(self, proc_output, demo):
         """
-        Test case to see if box has moved
+        Test case to see if node has finished executing and to gather 2 model locations
         """
-
+        model_name = "artefacts_box"
         sleep(10)
 
         (
             TestCollision.x_variable,
             TestCollision.y_variable,
             TestCollision.z_variable,
-        ) = self.get_box_location()
+        ) = get_model_location(model_name)
 
         proc_output.assertWaitFor("Block has been moved", timeout=180)
 
@@ -114,7 +115,7 @@ class TestCollision(unittest.TestCase):
             TestCollision.x_new_variable,
             TestCollision.y_new_variable,
             TestCollision.z_new_variable,
-        ) = self.get_box_location()
+        ) = get_model_location(model_name)
 
 
 @launch_testing.post_shutdown_test()
@@ -134,6 +135,3 @@ class TestAfterShutdown(unittest.TestCase):
         self.assertAlmostEqual(
             TestCollision.z_variable, TestCollision.z_new_variable, decimal
         )
-        
-# /home/decarabas/artefacts_interbotix_movit2/src/artefacts_demo_control/models
-# /home/decarabas/artefacts_interbotix_moveit2/src/artefacts_demo_control/models
