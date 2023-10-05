@@ -134,3 +134,6 @@ class TestAfterShutdown(unittest.TestCase):
         self.assertAlmostEqual(
             TestCollision.z_variable, TestCollision.z_new_variable, decimal
         )
+        
+# /home/decarabas/artefacts_interbotix_movit2/src/artefacts_demo_control/models
+# /home/decarabas/artefacts_interbotix_moveit2/src/artefacts_demo_control/models

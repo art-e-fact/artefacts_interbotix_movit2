@@ -16,7 +16,7 @@
     </include>
     <include>
       <uri>model://artefacts_box</uri>
-        <pose>0.41257 0.026185 0.0225 -1e-06 -4e-06 0.03079</pose>
+      <pose>0.41257 0.026185 0.0225 -1e-06 -4e-06 0.03079</pose>
     </include>
   </world>
 </sdf>
