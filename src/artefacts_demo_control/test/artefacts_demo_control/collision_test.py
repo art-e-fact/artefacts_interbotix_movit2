@@ -98,40 +98,28 @@ def get_model_location(model_name):
 class TestCollision(unittest.TestCase):
     def test_box_moved(self, proc_output, demo):
         """
-        Test case to see if node has finished executing and to gather 2 model locations
+        Test case to see if box has moved, if the values are no longer equal it means that the block has shifted position
         """
+
         model_name = "artefacts_box"
+        decimal = 3
+
         sleep(10)
 
         (
-            TestCollision.x_variable,
-            TestCollision.y_variable,
-            TestCollision.z_variable,
+            x_variable,
+            y_variable,
+            z_variable,
         ) = get_model_location(model_name)
 
-        proc_output.assertWaitFor("Block has been moved", timeout=180)
+        proc_output.assertWaitFor("Trajectory Has Executed", timeout=180)
 
         (
-            TestCollision.x_new_variable,
-            TestCollision.y_new_variable,
-            TestCollision.z_new_variable,
+            x_new_variable,
+            y_new_variable,
+            z_new_variable,
         ) = get_model_location(model_name)
 
-
-@launch_testing.post_shutdown_test()
-class TestAfterShutdown(unittest.TestCase):
-    def test_collsion(self):
-        """
-        Collision Test case, if the values are no longer equal it means that the block has shifted position through a collison
-        """
-        decimal = 3
-
-        self.assertAlmostEqual(
-            TestCollision.x_variable, TestCollision.x_new_variable, decimal
-        )
-        self.assertAlmostEqual(
-            TestCollision.y_variable, TestCollision.y_new_variable, decimal
-        )
-        self.assertAlmostEqual(
-            TestCollision.z_variable, TestCollision.z_new_variable, decimal
-        )
+        self.assertAlmostEqual(x_variable, x_new_variable, decimal)
+        self.assertAlmostEqual(y_variable, y_new_variable, decimal)
+        self.assertAlmostEqual(z_variable, z_new_variable, decimal)

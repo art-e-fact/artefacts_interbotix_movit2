@@ -99,7 +99,7 @@ def main():
     moveit2.move_to_configuration(joint_positions_init)
     moveit2.wait_until_executed()
 
-    node.get_logger().info("Block has been moved")
+    node.get_logger().info("Trajectory Has Executed")
 
     rclpy.shutdown()
     exit(0)
