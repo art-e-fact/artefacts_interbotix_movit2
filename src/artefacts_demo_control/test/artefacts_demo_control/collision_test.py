@@ -104,7 +104,7 @@ class TestCollision(unittest.TestCase):
         model_name = "artefacts_box"
         decimal = 3
 
-        sleep(10)
+        proc_output.assertWaitFor("Node Is Ready", timeout=180)
 
         (
             x_variable,

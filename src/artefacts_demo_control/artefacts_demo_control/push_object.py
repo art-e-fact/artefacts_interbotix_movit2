@@ -17,7 +17,6 @@ from time import sleep
 
 def main():
     rclpy.init()
-    sleep(10)
 
     # Create node
     node = Node("artefacts_control")
@@ -74,6 +73,10 @@ def main():
         -1.02974,
         0.0,
     ]
+
+    sleep(5)
+
+    node.get_logger().info("Node Is Ready")
 
     # Init
 
