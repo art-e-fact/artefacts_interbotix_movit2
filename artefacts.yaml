@@ -1,0 +1,18 @@
+version: 0.1.0
+
+project: artefacts-interbotix-movit2
+
+jobs:
+  demo:
+    type: test
+    package:
+      docker:
+        build:
+          dockerfile: ./Dockerfile
+    runtime:
+      simulator: gazebo:11
+      framework: ros2:humble
+    scenarios:
+      settings:
+        - name: collision
+          ros_testfile: src/artefacts_demo_control/test/artefacts_demo_control/collision_test.py
