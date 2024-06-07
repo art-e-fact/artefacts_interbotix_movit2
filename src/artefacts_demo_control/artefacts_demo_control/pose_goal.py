@@ -71,15 +71,25 @@ def main():
         callback_group=callback_group,
         follow_joint_trajectory_action_name = "/wx200/arm_controller/follow_joint_trajectory"
     )
-    moveit2_gripper = GripperCommand(
+    #moveit2_gripper = GripperCommand(
+    #    node=node,
+    #    gripper_joint_names=panda.gripper_joint_names(),
+    #    open_gripper_joint_positions=[0.037, -0.037],
+    #    closed_gripper_joint_positions=[0.03, -0.03],
+    #    max_effort=10.0,
+    #    ignore_new_calls_while_executing=False,
+    #    callback_group=callback_group,
+    #    gripper_command_action_name="/wx200/gripper_controller/follow_joint_trajectory",
+    #)
+    print(panda.gripper_joint_names())
+    moveit2_gripper = MoveIt2(
         node=node,
-        gripper_joint_names=panda.gripper_joint_names(),
-        open_gripper_joint_positions=[0.037, -0.037],
-        closed_gripper_joint_positions=[0.03, -0.03],
-        max_effort=10.0,
-        ignore_new_calls_while_executing=False,
+        joint_names=panda.gripper_joint_names(),
+        base_link_name=panda.base_link_name(),
+        end_effector_name=panda.end_effector_name(),
+        group_name="interbotix_gripper",
         callback_group=callback_group,
-        gripper_command_action_name="/wx200/gripper_controller/follow_joint_trajectory",
+        follow_joint_trajectory_action_name="/wx200/gripper_controller/follow_joint_trajectory",
     )
 
     # Spin the node in background thread(s)
@@ -102,11 +112,14 @@ def main():
     #for quat_xyzw in orientations:
     x= 0.25
     y= 0.0
-    moveit2_gripper.open()
+    #moveit2_gripper.open()
+    moveit2_gripper.move_to_configuration([0.036,-0.036])
     for tray_tilt in [45, 90]:
         for karaage_orientation in [0, 90]:
     
             for z in [0.1, -0.04]:
+                if z > 0.0:
+                    moveit2_gripper.move_to_configuration([0.036,-0.036])
                 quat_xyzw = get_end_effector_orientation(tray_tilt, karaage_orientation)
                 # Move to pose
                 position = [x,y,z]
@@ -117,7 +130,9 @@ def main():
                         tolerance_orientation=0.005)
                 moveit2.wait_until_executed()
                 sleep(2.0)
-            moveit2_gripper.close()
+                #moveit2_gripper.close()
+                if z < 0.0:
+                    moveit2_gripper.move_to_configuration([0.03,-0.03])
             #moveit2_gripper.wait_until_executed()
             sleep(2.0)
 
