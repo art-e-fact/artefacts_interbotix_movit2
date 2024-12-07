@@ -10,7 +10,28 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.node import Node
 
 from pymoveit2 import MoveIt2
+from pymoveit2 import GripperCommand
 from pymoveit2.robots import interbotix as panda
+from time import sleep
+import numpy as np
+import math
+
+def get_quaternion_from_euler(roll, pitch, yaw):
+  """
+  Convert an Euler angle to a quaternion.
+  Input
+    :param roll: The roll (rotation around x-axis) angle in radians.
+    :param pitch: The pitch (rotation around y-axis) angle in radians.
+    :param yaw: The yaw (rotation around z-axis) angle in radians.
+  Output
+    :return qx, qy, qz, qw: The orientation in quaternion [x,y,z,w] format
+  """
+  qx = np.sin(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) - np.cos(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+  qy = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
+  qz = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
+  qw = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+  return [qx, qy, qz, qw]
+
 
 
 def main():
@@ -21,11 +42,19 @@ def main():
 
     # Declare parameters for position and orientation
     # node.declare_parameter("position", [0.4, 0.0, 0.3])
-    node.declare_parameter("position", [0.416925, 0.0, 0.02])
+    # gripper down
+    node.declare_parameter("position", [0.25, 0.0, 0.18])
+    # gripper front
+    # node.declare_parameter("position", [0.35, 0.0, 0.3])
 
-    # node.declare_parameter("quat_xyzw", [1.9059777969232528e-06, 1.9606715795816854e-05, -4.693995288107544e-05, 1.0])
-    node.declare_parameter("quat_xyzw", [0.0, 0.0, 0.0, 1.0])
-    # node.declare_parameter("quat_xyzw", [-2.757105, -0.554440, -0.192296, 1.0])
+    # toward front, no rotation
+    #node.declare_parameter("quat_xyzw", [0.0, 0.0, 0.0, 1.0])
+    # toward front, 90 rotation
+    #node.declare_parameter("quat_xyzw", [0.707, 0.0, 0.0, 0.707])
+    # toward front down, 0 rotation
+    #node.declare_parameter("quat_xyzw", [0.0, 0.707, 0.0, 0.707])
+    # toward front down, 90 rotation
+    node.declare_parameter("quat_xyzw", [-0.5, -0.5, 0.5, -0.5])
 
     node.declare_parameter("cartesian", False)
 
@@ -42,24 +71,70 @@ def main():
         callback_group=callback_group,
         follow_joint_trajectory_action_name = "/wx200/arm_controller/follow_joint_trajectory"
     )
+    #moveit2_gripper = GripperCommand(
+    #    node=node,
+    #    gripper_joint_names=panda.gripper_joint_names(),
+    #    open_gripper_joint_positions=[0.037, -0.037],
+    #    closed_gripper_joint_positions=[0.03, -0.03],
+    #    max_effort=10.0,
+    #    ignore_new_calls_while_executing=False,
+    #    callback_group=callback_group,
+    #    gripper_command_action_name="/wx200/gripper_controller/follow_joint_trajectory",
+    #)
+    print(panda.gripper_joint_names())
+    moveit2_gripper = MoveIt2(
+        node=node,
+        joint_names=panda.gripper_joint_names(),
+        base_link_name=panda.base_link_name(),
+        end_effector_name=panda.end_effector_name(),
+        group_name="interbotix_gripper",
+        callback_group=callback_group,
+        follow_joint_trajectory_action_name="/wx200/gripper_controller/follow_joint_trajectory",
+    )
 
     # Spin the node in background thread(s)
-    executor = rclpy.executors.MultiThreadedExecutor(2)
+    executor = rclpy.executors.MultiThreadedExecutor(3)
     executor.add_node(node)
     executor_thread = Thread(target=executor.spin, daemon=True, args=())
     executor_thread.start()
+    # Sleep a while in order to get the first joint state
+    node.create_rate(10.0).sleep()
 
     # Get parameters
     position = node.get_parameter("position").get_parameter_value().double_array_value
     quat_xyzw = node.get_parameter("quat_xyzw").get_parameter_value().double_array_value
     cartesian = node.get_parameter("cartesian").get_parameter_value().bool_value
 
-    # Move to pose
-    node.get_logger().info(
-        f"Moving to {{position: {list(position)}, quat_xyzw: {list(quat_xyzw)}}}"
-    )
-    moveit2.move_to_pose(position=position, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link")
-    moveit2.wait_until_executed()
+    orientations = [[0.0, 0.0, 0.0, 1.0], [0.707, 0.0, 0.0, 0.707], [0.0, 0.707, 0.0, 0.707],[-0.5, -0.5, 0.5, -0.5]]
+    def get_end_effector_orientation(tray_tilt, karaage_orientation):
+        return get_quaternion_from_euler(math.radians(karaage_orientation), math.radians(tray_tilt),0)
+
+    #for quat_xyzw in orientations:
+    x= 0.25
+    y= 0.0
+    #moveit2_gripper.open()
+    moveit2_gripper.move_to_configuration([0.036,-0.036])
+    for tray_tilt in [45, 90]:
+        for karaage_orientation in [0, 90]:
+    
+            for z in [0.1, -0.04]:
+                if z > 0.0:
+                    moveit2_gripper.move_to_configuration([0.036,-0.036])
+                quat_xyzw = get_end_effector_orientation(tray_tilt, karaage_orientation)
+                # Move to pose
+                position = [x,y,z]
+                node.get_logger().info(
+                    f"Moving to {{position: {list(position)}, quat_xyzw: {list(quat_xyzw)}}}"
+                )
+                moveit2.move_to_pose(position=position, quat_xyzw=quat_xyzw, cartesian=cartesian, target_link = "wx200/ee_gripper_link",
+                        tolerance_orientation=0.005)
+                moveit2.wait_until_executed()
+                sleep(2.0)
+                #moveit2_gripper.close()
+                if z < 0.0:
+                    moveit2_gripper.move_to_configuration([0.03,-0.03])
+            #moveit2_gripper.wait_until_executed()
+            sleep(2.0)
 
     rclpy.shutdown()
     exit(0)
